@@ -87,7 +87,6 @@ public class CustomerServiceTest {
         customer.setLastName(LAST_NAME);
         customer.setCustomer_url(CUSTOMER_URL);
 
-
         // when
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
         CustomerDTO returnedCustomerDTO = customerService.createNewCustomer(new CustomerDTO());
@@ -96,6 +95,29 @@ public class CustomerServiceTest {
         assertEquals(FIRST_NAME,returnedCustomerDTO.getFirstName());
         assertEquals(LAST_NAME,returnedCustomerDTO.getLastName());
         assertEquals(CUSTOMER_URL,returnedCustomerDTO.getCustomer_url());
+        verify(customerRepository,times(1)).save(any(Customer.class));
+    }
+
+    @Test
+    public void testUpdateExistingCustomer() throws Exception {
+
+        // given
+        Customer customer = new Customer();
+        customer.setId(ID);
+        customer.setFirstName(FIRST_NAME);
+        customer.setLastName(LAST_NAME);
+        customer.setCustomer_url(CUSTOMER_URL);
+
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstName(FIRST_NAME);
+
+        // when
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
+        CustomerDTO returnedCustomer = customerService.updateExistingCustomer(ID,customerDTO);
+
+        // then
+        assertEquals(FIRST_NAME,returnedCustomer.getFirstName());
+        assertEquals(LAST_NAME,returnedCustomer.getLastName());
         verify(customerRepository,times(1)).save(any(Customer.class));
     }
 }
