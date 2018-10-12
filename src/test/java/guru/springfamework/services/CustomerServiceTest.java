@@ -11,11 +11,21 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class CustomerServiceTest {
+
+    private final Long ID = 1L;
+    private final String FIRST_NAME = "Bob";
+    private final String LAST_NAME = "Smith";
+    private final String CUSTOMER_URL = "/api/v1/customer/2";
 
     @Mock
     CustomerRepository customerRepository;
@@ -46,5 +56,46 @@ public class CustomerServiceTest {
 
         assertEquals(3,returnedCustomers.size());
         assertEquals("Zazu",returnedCustomers.get(0).getFirstName());
+    }
+
+    @Test
+    public void testGetCustomerById() throws Exception {
+        Customer customer = new Customer();
+        customer.setId(ID);
+        customer.setFirstName(FIRST_NAME);
+        customer.setLastName(LAST_NAME);
+        customer.setCustomer_url(CUSTOMER_URL);
+
+        Optional<Customer> optionalCustomer = Optional.of(customer);
+
+        when(customerRepository.findById(anyLong())).thenReturn(optionalCustomer);
+
+        CustomerDTO returnedDTO = customerService.getCustomerById(ID);
+
+        assertEquals(ID,returnedDTO.getId());
+        assertEquals(FIRST_NAME,returnedDTO.getFirstName());
+        assertEquals(LAST_NAME,returnedDTO.getLastName());
+        assertEquals(CUSTOMER_URL,returnedDTO.getCustomer_url());
+    }
+
+    @Test
+    public void testCreateNewCustomer() throws Exception {
+        // given
+        Customer customer = new Customer();
+        customer.setId(ID);
+        customer.setFirstName(FIRST_NAME);
+        customer.setLastName(LAST_NAME);
+        customer.setCustomer_url(CUSTOMER_URL);
+
+
+        // when
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
+        CustomerDTO returnedCustomerDTO = customerService.createNewCustomer(new CustomerDTO());
+        // then
+        assertEquals(ID,returnedCustomerDTO.getId());
+        assertEquals(FIRST_NAME,returnedCustomerDTO.getFirstName());
+        assertEquals(LAST_NAME,returnedCustomerDTO.getLastName());
+        assertEquals(CUSTOMER_URL,returnedCustomerDTO.getCustomer_url());
+        verify(customerRepository,times(1)).save(any(Customer.class));
     }
 }

@@ -25,6 +25,39 @@ public class Bootstrap implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        loadCategories();
+
+        loadCustomers();
+    }
+
+    private void loadCustomers() {
+        Customer bob = new Customer();
+        bob.setFirstName("Bob");
+        bob.setLastName("Smith");
+        bob.setCustomer_url("/api/v1/customers/1");
+
+        Customer carol = new Customer();
+        carol.setFirstName("Carol");
+        carol.setLastName("Smith");
+        carol.setCustomer_url("/api/v1/customers/2");
+
+        Customer ted = new Customer();
+        ted.setFirstName("Ted");
+        ted.setLastName("Jones");
+        ted.setCustomer_url("/api/v1/customers/3");
+
+        Customer alice = new Customer();
+        alice.setFirstName("Alice");
+        alice.setLastName("Jones");
+        alice.setCustomer_url("/api/v1/customers/4");
+
+        List<Customer> customers = Arrays.asList(bob,carol,ted,alice);
+
+        customerRepository.saveAll(customers);
+        System.out.println("Customers Loaded = " + customerRepository.count());
+    }
+
+    private void loadCategories() {
         List<Category> categories = new ArrayList<>();
 
         Category fruits = new Category();
@@ -50,30 +83,5 @@ public class Bootstrap implements CommandLineRunner {
         categoryRepository.saveAll(categories);
 
         System.out.println("Data Loaded = " + categoryRepository.count() + " categories.");
-
-        Customer bob = new Customer();
-        bob.setFirstName("Bob");
-        bob.setLastName("Smith");
-        bob.setCustomer_url("/api/v1/customers/1");
-
-        Customer carol = new Customer();
-        carol.setFirstName("Carol");
-        carol.setLastName("Smith");
-        carol.setCustomer_url("/api/v1/customers/2");
-
-        Customer ted = new Customer();
-        ted.setFirstName("Ted");
-        ted.setLastName("Jones");
-        ted.setCustomer_url("/api/v1/customers/3");
-
-        Customer alice = new Customer();
-        alice.setFirstName("Alice");
-        alice.setLastName("Jones");
-        alice.setCustomer_url("/api/v1/customers/4");
-
-        List<Customer> customers = Arrays.asList(bob,carol,ted,alice);
-
-        customerRepository.saveAll(customers);
-        System.out.println("Customers Loaded = " + customerRepository.count());
     }
 }
