@@ -16,6 +16,8 @@ public class CustomerController {
 
     private CustomerService customerService;
 
+    public static final String BASE_URL = "/api/v1/customers/";
+
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
@@ -39,6 +41,17 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable Long id,@RequestBody CustomerDTO customerDTO) {
         return new ResponseEntity<CustomerDTO>(customerService.updateExistingCustomer(id,customerDTO),HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CustomerDTO> patchCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
+        return new ResponseEntity<CustomerDTO>(customerService.patchExistingCustomer(id,customerDTO),HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomerById(@PathVariable Long id) {
+        customerService.deleteCustomerById(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
 }

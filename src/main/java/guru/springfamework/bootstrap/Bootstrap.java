@@ -1,5 +1,6 @@
 package guru.springfamework.bootstrap;
 
+import guru.springfamework.controllers.v1.CustomerController;
 import guru.springfamework.domain.Category;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CategoryRepository;
@@ -34,22 +35,22 @@ public class Bootstrap implements CommandLineRunner {
         Customer bob = new Customer();
         bob.setFirstName("Bob");
         bob.setLastName("Smith");
-        bob.setCustomer_url("/api/v1/customers/1");
+        bob.setCustomer_url(CustomerController.BASE_URL + "1");
 
         Customer carol = new Customer();
         carol.setFirstName("Carol");
         carol.setLastName("Smith");
-        carol.setCustomer_url("/api/v1/customers/2");
+        carol.setCustomer_url(CustomerController.BASE_URL + "2");
 
         Customer ted = new Customer();
         ted.setFirstName("Ted");
         ted.setLastName("Jones");
-        ted.setCustomer_url("/api/v1/customers/3");
+        ted.setCustomer_url(CustomerController.BASE_URL + "3");
 
         Customer alice = new Customer();
         alice.setFirstName("Alice");
         alice.setLastName("Jones");
-        alice.setCustomer_url("/api/v1/customers/4");
+        alice.setCustomer_url(CustomerController.BASE_URL + "4");
 
         List<Customer> customers = Arrays.asList(bob,carol,ted,alice);
 

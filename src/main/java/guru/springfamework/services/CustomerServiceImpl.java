@@ -2,6 +2,7 @@ package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controllers.v1.CustomerController;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO getCustomerById(Long id) throws Exception {
         return customerRepository.findById(id)
                 .map(customerMapper::customerToCustomerDTO)
-                .orElseThrow(Exception::new);
+                .orElseThrow(ResourceNotFoundException::new);
 
     }
 
@@ -47,5 +48,37 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO updateExistingCustomer(Long id,CustomerDTO customerDTO) {
         Customer updatedCustomer = customerRepository.save(customerMapper.customerDTOToCustomer(customerDTO));
         return customerMapper.customerToCustomerDTO(updatedCustomer);
+    }
+
+    @Override
+    public CustomerDTO patchExistingCustomer(Long id, CustomerDTO customerDTO) {
+        return customerRepository.findById(id)
+                .map(customer -> {
+                    if(customerDTO.getFirstName() != null) {
+                        customer.setFirstName(customerDTO.getFirstName());
+                    }
+
+                    if(customerDTO.getLastName() != null) {
+                        customer.setLastName(customerDTO.getLastName());
+                    }
+
+                    CustomerDTO returnedCustomerDTO =  customerMapper.customerToCustomerDTO(
+                            customerRepository.save(customer));
+
+                    returnedCustomerDTO.setCustomer_url(getCustomerUrl(id));
+
+                    return returnedCustomerDTO;
+
+                })
+                .orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @Override
+    public void deleteCustomerById(Long id) {
+        customerRepository.deleteById(id);
+    }
+
+    public String getCustomerUrl(Long id) {
+        return CustomerController.BASE_URL + id;
     }
 }

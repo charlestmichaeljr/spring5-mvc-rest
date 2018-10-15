@@ -2,6 +2,7 @@ package guru.springfamework.spring5mvcrest;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controllers.v1.CustomerController;
 import guru.springfamework.domain.Customer;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +13,7 @@ public class CustomerMapperTest {
 
     private final String FIRST_NAME = "Bob";
     private final String LAST_NAME = "Smith";
-    private final String CUSTOMER_URL = "/api/v1/customer/1";
+    private final String CUSTOMER_URL = CustomerController.BASE_URL + "1";
 
     CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 

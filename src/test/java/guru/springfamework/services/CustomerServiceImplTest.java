@@ -2,6 +2,7 @@ package guru.springfamework.services;
 
 import guru.springfamework.api.v1.mapper.CustomerMapper;
 import guru.springfamework.api.v1.model.CustomerDTO;
+import guru.springfamework.controllers.v1.CustomerController;
 import guru.springfamework.domain.Customer;
 import guru.springfamework.repositories.CustomerRepository;
 import org.junit.Before;
@@ -20,12 +21,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CustomerServiceTest {
+public class CustomerServiceImplTest {
 
     private final Long ID = 1L;
     private final String FIRST_NAME = "Bob";
     private final String LAST_NAME = "Smith";
-    private final String CUSTOMER_URL = "/api/v1/customer/2";
+    private final String CUSTOMER_URL = CustomerController.BASE_URL +  "2";
 
     @Mock
     CustomerRepository customerRepository;
@@ -44,7 +45,7 @@ public class CustomerServiceTest {
         Customer customer1 = new Customer();
         customer1.setFirstName("Zazu");
         customer1.setLastName("Petals");
-        customer1.setCustomer_url("/api/v1/3");
+        customer1.setCustomer_url(CustomerController.BASE_URL +  "3");
         customers.add(customer1);
 
         customers.add(new Customer());
@@ -119,5 +120,12 @@ public class CustomerServiceTest {
         assertEquals(FIRST_NAME,returnedCustomer.getFirstName());
         assertEquals(LAST_NAME,returnedCustomer.getLastName());
         verify(customerRepository,times(1)).save(any(Customer.class));
+    }
+
+    @Test
+    public void testDeleteById() throws Exception {
+        customerService.deleteCustomerById(ID);
+
+        verify(customerRepository,times(1)).deleteById(anyLong());
     }
 }

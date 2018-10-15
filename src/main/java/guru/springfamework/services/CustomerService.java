@@ -10,4 +10,6 @@ public interface CustomerService {
     CustomerDTO getCustomerById(Long id) throws Exception;
     CustomerDTO createNewCustomer(CustomerDTO customerDTO);
     CustomerDTO updateExistingCustomer(Long id,CustomerDTO customerDTO);
+    CustomerDTO patchExistingCustomer(Long id,CustomerDTO customerDTO);
+    void deleteCustomerById(Long id);
 }

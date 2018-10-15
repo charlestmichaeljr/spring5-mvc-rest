@@ -1,5 +1,6 @@
 package guru.springfamework.controllers.v1;
 
+import guru.springfamework.api.v1.RestResponseEntityExceptionHandler;
 import guru.springfamework.api.v1.model.CategoryDTO;
 import guru.springfamework.services.CategoryService;
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,10 @@ public class CategoryControllerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(categoryController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .build();
 
     }
 
