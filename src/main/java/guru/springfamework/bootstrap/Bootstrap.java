@@ -1,10 +1,13 @@
 package guru.springfamework.bootstrap;
 
 import guru.springfamework.controllers.v1.CustomerController;
+import guru.springfamework.controllers.v1.VendorController;
 import guru.springfamework.domain.Category;
 import guru.springfamework.domain.Customer;
+import guru.springfamework.domain.Vendor;
 import guru.springfamework.repositories.CategoryRepository;
 import guru.springfamework.repositories.CustomerRepository;
+import guru.springfamework.repositories.VendorRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +20,13 @@ public class Bootstrap implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
     private final CustomerRepository customerRepository;
+    private final VendorRepository vendorRepository;
 
-    public Bootstrap(CategoryRepository categoryRepository, CustomerRepository customerRepository) {
+    public Bootstrap(CategoryRepository categoryRepository, CustomerRepository customerRepository,
+                     VendorRepository vendorRepository) {
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
+        this.vendorRepository = vendorRepository;
     }
 
     @Override
@@ -29,6 +35,8 @@ public class Bootstrap implements CommandLineRunner {
         loadCategories();
 
         loadCustomers();
+
+        loadVendors();
     }
 
     private void loadCustomers() {
@@ -84,5 +92,27 @@ public class Bootstrap implements CommandLineRunner {
         categoryRepository.saveAll(categories);
 
         System.out.println("Data Loaded = " + categoryRepository.count() + " categories.");
+    }
+
+    private void loadVendors() {
+
+        List<Vendor> vendors = new ArrayList<>();
+
+        Vendor vendor1 = new Vendor();
+        vendor1.setName("Michael Brothers");
+        vendor1.setVendor_url(VendorController.BASE_URL + "1");
+        vendors.add(vendor1);
+
+        Vendor vendor2 = new Vendor();
+        vendor2.setName("Tourtellot");
+        vendor2.setVendor_url(VendorController.BASE_URL + "2");
+        vendors.add(vendor2);
+
+        Vendor vendor3 = new Vendor();
+        vendor3.setName("Farm Fresh");
+        vendor3.setVendor_url(VendorController.BASE_URL + "3");
+        vendors.add(vendor3);
+
+        vendorRepository.saveAll(vendors);
     }
 }
