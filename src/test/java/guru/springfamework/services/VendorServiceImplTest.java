@@ -3,7 +3,6 @@ package guru.springfamework.services;
 import guru.springfamework.api.v1.mapper.VendorMapper;
 import guru.springfamework.api.v1.model.VendorDTO;
 import guru.springfamework.controllers.v1.VendorController;
-import guru.springfamework.controllers.v1.VendorControllerTest;
 import guru.springfamework.domain.Vendor;
 import guru.springfamework.repositories.VendorRepository;
 import org.junit.Before;
@@ -16,10 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class VendorServiceImplTest {
 
@@ -47,7 +45,6 @@ public class VendorServiceImplTest {
 
         Vendor vendor1 = new Vendor();
         vendor1.setName(NAME);
-        vendor1.setVendor_url(VendorController.BASE_URL + "2");
         vendor1.setId(ID);
         vendors.add(vendor1);
 
@@ -69,7 +66,6 @@ public class VendorServiceImplTest {
     public void testFindVendorById() throws Exception {
         Vendor vendor1 = new Vendor();
         vendor1.setName(NAME);
-        vendor1.setVendor_url(VendorController.BASE_URL + "2");
         vendor1.setId(ID);
 
         Optional<Vendor> optionalVendor = Optional.of(vendor1);
@@ -77,9 +73,36 @@ public class VendorServiceImplTest {
         when(vendorRepository.findById(anyLong())).thenReturn(optionalVendor);
 
         VendorDTO returnedVendor = vendorService.findById(ID);
-        assertEquals(vendor1.getId(),returnedVendor.getId());
         assertEquals(vendor1.getName(),returnedVendor.getName());
-        assertEquals(vendor1.getVendor_url(),returnedVendor.getVendor_url());
         verify(vendorRepository,times(1)).findById(anyLong());
+    }
+
+    @Test
+    public void testPatchVendor() throws Exception {
+        // given
+        Vendor vendor = new Vendor();
+        vendor.setName(NAME);
+        vendor.setId(ID);
+
+        Optional<Vendor> vendorOptional = Optional.of(vendor);
+
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName(NAME);
+        vendorDTO.setVendor_url(VendorController.BASE_URL + "1");
+
+        // when
+        when(vendorRepository.findById(ID)).thenReturn(vendorOptional);
+        when(vendorRepository.save(any(Vendor.class))).thenReturn(vendor);
+        // then
+        VendorDTO returnedDTO =  vendorService.patchVendor(ID,vendorDTO);
+        assertEquals(NAME,returnedDTO.getName());
+        verify(vendorRepository,times(1)).save(any(Vendor.class));
+    }
+
+    @Test
+    public void testDeleteVendor() throws Exception {
+        vendorService.deleteVendor(ID);
+
+        verify(vendorRepository,times(1)).deleteById(anyLong());
     }
 }

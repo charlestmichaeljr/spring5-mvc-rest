@@ -100,17 +100,14 @@ public class Bootstrap implements CommandLineRunner {
 
         Vendor vendor1 = new Vendor();
         vendor1.setName("Michael Brothers");
-        vendor1.setVendor_url(VendorController.BASE_URL + "1");
         vendors.add(vendor1);
 
         Vendor vendor2 = new Vendor();
         vendor2.setName("Tourtellot");
-        vendor2.setVendor_url(VendorController.BASE_URL + "2");
         vendors.add(vendor2);
 
         Vendor vendor3 = new Vendor();
         vendor3.setName("Farm Fresh");
-        vendor3.setVendor_url(VendorController.BASE_URL + "3");
         vendors.add(vendor3);
 
         vendorRepository.saveAll(vendors);

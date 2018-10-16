@@ -26,26 +26,21 @@ public class VendorMapperTest {
         Vendor vendor = new Vendor();
         vendor.setId(ID);
         vendor.setName(NAME);
-        vendor.setVendor_url(VENDOR_URL);
 
         VendorDTO vendorDTO =  mapper.vendorToVendorDTO(vendor);
 
-        assertEquals(ID,vendorDTO.getId());
         assertEquals(NAME,vendorDTO.getName());
-        assertEquals(VENDOR_URL,vendorDTO.getVendor_url());
+
     }
 
     @Test
     public void testVendorDTOToVendor() {
         VendorDTO vendorDTO = new VendorDTO();
-        vendorDTO.setId(ID);
         vendorDTO.setName(NAME);
         vendorDTO.setVendor_url(VENDOR_URL);
 
         Vendor vendor =  mapper.vendorDTOToVendor(vendorDTO);
 
-        assertEquals(ID,vendor.getId());
         assertEquals(NAME,vendor.getName());
-        assertEquals(VENDOR_URL,vendor.getVendor_url());
     }
 }

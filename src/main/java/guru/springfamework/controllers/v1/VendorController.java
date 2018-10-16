@@ -25,7 +25,20 @@ public class VendorController {
     }
 
     @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
     public VendorDTO getVendorById(@PathVariable Long id) {
         return vendorService.findById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public VendorDTO createVendor(@RequestBody VendorDTO vendorDTO) {
+        return vendorService.createVendor(vendorDTO);
+    }
+
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public VendorDTO updateVendor(@PathVariable Long id,@RequestBody VendorDTO vendorDTO) {
+        return vendorService.updateVendor(id,vendorDTO);
     }
 }
