@@ -19,9 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -115,5 +113,33 @@ public class VendorControllerTest {
                 .content(AbstractRestControllerTest.asJsonString(originalVendor)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
+    }
+
+    @Test
+    public void testDeleteVendor() throws Exception {
+        // when
+        mockMvc.perform(delete(VendorController.BASE_URL + ID)
+        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(vendorService,times(1)).deleteVendor(anyLong());
+
+    }
+
+    @Test
+    public void testPatchVendor() throws Exception {
+
+        // given
+        VendorDTO vendorDTO = new VendorDTO();
+        vendorDTO.setName(NAME);
+        // when
+        when(vendorService.patchVendor(anyLong(),any(VendorDTO.class))).thenReturn(vendorDTO);
+        mockMvc.perform(patch(VendorController.BASE_URL + ID)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(AbstractRestControllerTest.asJsonString(vendorDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name",equalTo(NAME)));
+        // then
+        verify(vendorService,times(1)).patchVendor(anyLong(),any(VendorDTO.class));
     }
 }
