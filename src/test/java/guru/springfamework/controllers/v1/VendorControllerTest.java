@@ -5,10 +5,15 @@ import guru.springfamework.api.v1.model.VendorDTO;
 import guru.springfamework.services.VendorService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -22,25 +27,28 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+@RunWith(SpringRunner.class)
+@WebMvcTest(controllers = {VendorController.class})
 public class VendorControllerTest {
+
+    /*
+    WebMvcTest annotation automatically wires up VendorController
+    MockBean annotation automatically wires up VendorService
+    AutoWiring MockMvc removes need to build the mockMvc
+     */
 
     private final Long ID = 1L;
     private final String NAME = "Rex Traylor";
     private final String VENDOR_URL = VendorController.BASE_URL;
 
-    @Mock
+    @MockBean
     VendorService vendorService;
 
+    @Autowired
     MockMvc mockMvc;
-
-    @InjectMocks()
-    VendorController vendorController;
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(vendorController).build();
     }
 
     @Test
