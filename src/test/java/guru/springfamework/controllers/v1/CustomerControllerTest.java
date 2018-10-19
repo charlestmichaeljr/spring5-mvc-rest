@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import javax.print.attribute.standard.Media;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,8 @@ public class CustomerControllerTest {
         when(customerService.getAllCustomers()).thenReturn(customers);
 
         mockMvc.perform(get(CustomerController.BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.customers", hasSize(2)));
     }
@@ -77,7 +79,8 @@ public class CustomerControllerTest {
         when(customerService.getCustomerById(anyLong())).thenReturn(customer);
 
         mockMvc.perform(get(CustomerController.BASE_URL + ID)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", equalTo(1)));
 
@@ -100,6 +103,7 @@ public class CustomerControllerTest {
         // then
         mockMvc.perform(post(CustomerController.BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(customerDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
@@ -119,10 +123,11 @@ public class CustomerControllerTest {
         // then
         mockMvc.perform(put(CustomerController.BASE_URL + ID)
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(customerDTO)))
                 .andExpect(status().is2xxSuccessful())
-        .andExpect(jsonPath("$.firstName",equalTo(FIRST_NAME)))
-        .andExpect(jsonPath("$.lastName",equalTo(LAST_NAME)));
+                .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)));
     }
 
     @Test
@@ -136,15 +141,16 @@ public class CustomerControllerTest {
         returnedCustomerDTO.setLastName(customerDTO.getLastName());
         returnedCustomerDTO.setCustomer_url(CUSTOMER_URL);
 
-        when(customerService.patchExistingCustomer(anyLong(),any(CustomerDTO.class))).thenReturn(returnedCustomerDTO);
+        when(customerService.patchExistingCustomer(anyLong(), any(CustomerDTO.class))).thenReturn(returnedCustomerDTO);
 
         mockMvc.perform(patch(CustomerController.BASE_URL + "1")
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(customerDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName",equalTo(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName",equalTo(LAST_NAME)))
-                .andExpect(jsonPath("$.customer_url",equalTo(CUSTOMER_URL)));
+                .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)))
+                .andExpect(jsonPath("$.customer_url", equalTo(CUSTOMER_URL)));
 
     }
 
@@ -155,9 +161,9 @@ public class CustomerControllerTest {
 
         // when
         mockMvc.perform(delete(CustomerController.BASE_URL + "1")
-        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         // then
-        verify(customerService,times(1)).deleteCustomerById(anyLong());
+        verify(customerService, times(1)).deleteCustomerById(anyLong());
     }
 }
